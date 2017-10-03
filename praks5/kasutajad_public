@@ -1,0 +1,27 @@
+#!bin/bash
+#
+for kasutaja in $(ls /home)
+do
+	# iga kasutaja kodukataloog
+	# kontrollida, kas on olemas public kaust
+	ls /home/$kasutaja | grep public > /dev/null
+	# kui leitud, siis exit käsu staatus on 0
+	# kui ei leia, kuid grep tegi töö korralikult, käsu exit staatus on 1
+	# väljundit huvitab ainult exit status
+	# sellepärast suunataksegi väljund /dev/null faili
+	if [ $? -eq 1 ]; then
+		# loome antud kataloogi
+		mkdir /home/$kasutaja /public && chown -R $kasutaja :$kasutaja /home/$kasutaja /public && chmod 751 /home/$kasutaja /public
+		# kontroll, kas sai loodud
+		if [ $? -eq 0 ]; then
+			echo "kasutaja nimega $kasutaja kodukaustas public loodud"
+			ls -la /home/$kasutajanimi
+		else
+			echo "probleem kasutaja $kasutaja public lisamisega"
+			echo "probleemi kood on $"
+		fi
+	# public kaust leitud, tuleb sellest teavitada
+	else
+		echo "kasutaja nimega $kasutaja kodukaustas public olemas"
+	fi
+done
